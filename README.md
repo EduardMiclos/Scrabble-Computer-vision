@@ -7,3 +7,8 @@ We are currently developing a **mobile application** which uses **Computer Visio
 <p align="center">
   <img width="800" src="https://i.imgur.com/8LAmASZ.jpg" alt="Gitflow diagram">
 </p>
+
+<h1>Use-Case Diagram</h1>
+<p align="center">
+  <img width="800" src="https://i.imgur.com/b2kUlL2.png" alt="Use-Case diagram">
+</p>
