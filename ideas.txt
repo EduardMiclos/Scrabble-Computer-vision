@@ -1,0 +1,3 @@
+- ask for permissions for 
+	-> camera (take a new picture and scan it)
+	-> picture files (scan a taken picture)
