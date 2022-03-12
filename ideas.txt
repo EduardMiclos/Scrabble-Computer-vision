@@ -1,3 +1,6 @@
 - ask for permissions for 
 	-> camera (take a new picture and scan it)
 	-> picture files (scan a taken picture)
+- besides ML, check for performance using
+	-> template matching
+	-> tesseract ocr
