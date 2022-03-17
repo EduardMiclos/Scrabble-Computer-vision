@@ -1,4 +1,4 @@
-imageIdx = 7
+imageIdx = 10
 imageExtension = 'jpg'
 imagePath = f'src/{imageIdx}.{imageExtension}'
 

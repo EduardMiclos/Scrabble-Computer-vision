@@ -1,8 +1,12 @@
 import cv2 as cv
 import imageInfo as imgInfo
+import numpy as np
 
-windowName = "Adaptive Thresholding"
-READ_FROM_CAMERA = True
+import idealTrackbarValues
+
+windowName1 = "Adaptive Thresholding"
+windowName2 = 'Original'
+READ_FROM_CAMERA = False
 
 def readImg():
     destImg = cv.imread(imgInfo.imagePath)
@@ -13,20 +17,51 @@ def readCamera():
     destImg = cv.VideoCapture(0)
     return destImg
 
-def generateTrackbars(windowName):
-    cv.namedWindow(windowName, cv.WINDOW_AUTOSIZE)
+def generateTrackbars(windowName1, windowName2):
+    cv.namedWindow(windowName1, cv.WINDOW_AUTOSIZE)
+    cv.namedWindow(windowName2, cv.WINDOW_AUTOSIZE)
 
-    cv.createTrackbar('Th_max', windowName, 0, 255, lambda _: _)
-    cv.createTrackbar('Th_type', windowName, 0, 1, lambda _: _)
-    cv.createTrackbar('Block size', windowName, 3, 100, lambda _: _)
-    cv.setTrackbarMin('Block size', windowName, 3)
-    cv.createTrackbar('Constant', windowName, 0, 100, lambda _: _)
+    cv.createTrackbar('Th_max', windowName1, 0, 255, lambda _: _)
+    cv.setTrackbarPos('Th_max', windowName1, idealTrackbarValues.thMax)
+
+    cv.createTrackbar('Th_type', windowName1, 0, 1, lambda _: _)
+    cv.setTrackbarPos('Th_type', windowName1, idealTrackbarValues.thType)
+
+    cv.createTrackbar('Block size', windowName1, 3, 100, lambda _: _)
+    cv.setTrackbarMin('Block size', windowName1, 3)
+    cv.setTrackbarPos('Block size', windowName1, idealTrackbarValues.blockSize)
+
+    cv.createTrackbar('Constant', windowName1, 0, 100, lambda _: _)
+    cv.setTrackbarPos('Constant', windowName1, idealTrackbarValues.constant)
+
+    cv.createTrackbar('Rect min_h', windowName2, 0, 100, lambda _: _)
+    cv.setTrackbarPos('Rect min_h', windowName2, idealTrackbarValues.rectMinH)
+
+    cv.createTrackbar('Rect max_h', windowName2, 0, 100, lambda _: _)
+    cv.setTrackbarPos('Rect max_h', windowName2, idealTrackbarValues.rectMaxH)
+
+    cv.createTrackbar('Rect min_w', windowName2, 0, 100, lambda _: _)
+    cv.setTrackbarPos('Rect min_w', windowName2, idealTrackbarValues.rectMinW)
+
+    cv.createTrackbar('Rect max_w', windowName2, 0, 100, lambda _: _)
+    cv.setTrackbarPos('Rect max_w', windowName2, idealTrackbarValues.rectMaxW)
 
     # Adaptive Threshold method:
     # 0 - ADAPTIVE_THRESH_MEAN_C
     # 1 - ADAPTIVE_THRESH_GAUSSIAN_C
-    cv.createTrackbar('Th method', windowName, 0, 1, lambda _: _)
-    cv.createTrackbar('Blur', windowName, 0, 10, lambda _: _)
+    cv.createTrackbar('Th method', windowName1, 0, 1, lambda _: _)
+    cv.setTrackbarPos('Th method', windowName1, idealTrackbarValues.thMethod)
+
+    cv.createTrackbar('Blur', windowName1, 0, 10, lambda _: _)
+    cv.setTrackbarPos('Blur', windowName1, idealTrackbarValues.blur)
+
+def readRectBounds(windowName):
+    _rectMinH = cv.getTrackbarPos('Rect min_h', windowName)
+    _rectMaxH = cv.getTrackbarPos('Rect max_h', windowName)
+    _rectMinW = cv.getTrackbarPos('Rect min_w', windowName)
+    _rectMaxW = cv.getTrackbarPos('Rect max_w', windowName)
+
+    return _rectMinH, _rectMaxH, _rectMinW, _rectMaxW
 
 def readThresholdValues(windowName):
     thMax = cv.getTrackbarPos('Th_max', windowName)
@@ -64,10 +99,8 @@ def applyGrayScale(img):
 
 if READ_FROM_CAMERA == True:
     src = readCamera()
-else:
-    src = readImg()
 
-generateTrackbars(windowName)
+generateTrackbars(windowName1, windowName2)
 
 while True:
     if READ_FROM_CAMERA == True:
@@ -77,49 +110,46 @@ while True:
         scrabbleImage = readImg()
 
     grayImage = applyGrayScale(scrabbleImage)
-    blurredImage = applyBlur(windowName, grayImage)
-    thresh = applyThresholding(windowName, blurredImage)
+    blurredImage = applyBlur(windowName1, grayImage)
+    thresh = applyThresholding(windowName1, blurredImage)
 
     # Finding all the contours of the threshold image/frame.
     contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
 
+    blank = thresh.copy()
+    blank[:] = 0
+
     for idx in range(len(contours)):
         contour = contours[idx]
+        cv.fillPoly(blank, pts=[contour], color=(255, 255, 255))
 
-        # Getting the moments of the current contour.
-        M = cv.moments(contour)
+        rectMinH, rectMaxH, rectMinW, rectMaxW = readRectBounds(windowName2)
 
-        if M['m00'] != 0:
+    contours, hierarchy = cv.findContours(blank, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
 
-            # Calculating the centroid.
-            cx = int(M['m10'] / M['m00'])
-            cy = int(M['m01'] / M['m00'])
+    edges = cv.Canny(thresh, 100, 200)
 
-            contourYcoords = [c[0][1] for c in contour]
-            contourXcoords = [c[0][0] for c in contour]
+    for contour in contours:
+        (x, y, w, h) = cv.boundingRect(contour)
 
-            maxContourY, minContourY = max(contourYcoords), min(contourYcoords)
-            maxContourX, minContourX = max(contourXcoords), min(contourXcoords)
+        if (h > rectMinH and h < rectMaxH and w < rectMaxW and w > rectMinW):
+            cv.rectangle(scrabbleImage, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-            dist_CentroidToUpperBound = abs(maxContourY - cy)
-            dist_CentroidToLowerBound = abs(minContourY - cy)
+            # Getting the moments of the current contour.
+            M = cv.moments(contour)
 
-            dist_CentroidToRightBound = abs(maxContourX - cx)
-            dist_CentroidToLeftBound = abs(minContourX - cx)
+            if M['m00'] != 0:
+                # Calculating the centroid.
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
 
-            dist_ContourUpperToLowerBound = maxContourY - minContourY
-            dist_ContourLeftToRightBound = maxContourX - minContourX
+                rect = cv.rectangle(scrabbleImage, (cx - 10, cy - 50) , (cx - 15, cy + 50), (255, 0, 0))
+                cv.circle(scrabbleImage, (cx, cy), 3, (0, 0, 255), -1)
 
-            centroid = (cx, cy)
-
-            contourArea = cv.contourArea(contour)
-
-            if abs(dist_CentroidToUpperBound - dist_CentroidToLowerBound) < 3 and abs(dist_CentroidToLeftBound - dist_CentroidToRightBound) < 3 and dist_ContourUpperToLowerBound > 5 and dist_ContourLeftToRightBound > 5:
-                cv.circle(scrabbleImage, centroid, 3, (0, 0, 255), -1)
-                cv.drawContours(scrabbleImage, contours, idx, (255, 0, 0), 2)
-
-    cv.imshow('Original', scrabbleImage)
-    cv.imshow(windowName, thresh)
+    cv.imshow('Edges', edges)
+    cv.imshow('Blank', blank)
+    cv.imshow(windowName1, thresh)
+    cv.imshow(windowName2, scrabbleImage)
 
     k = cv.waitKey(1) & 0xFF
 
