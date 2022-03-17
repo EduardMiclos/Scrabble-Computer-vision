@@ -12,3 +12,8 @@ We are currently developing a **mobile application** which uses **Computer Visio
 <p align="center">
   <img width="800" src="https://i.imgur.com/b2kUlL2.png" alt="Use-Case diagram">
 </p>
+
+<p align="center">
+  <img width="800" src="https://i.imgur.com/HmJ33Mt.jpg" alt="Image processing diagram">
+</p>
+
