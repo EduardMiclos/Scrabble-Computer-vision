@@ -1,12 +1,11 @@
 import cv2 as cv
 import imageInfo as imgInfo
 import numpy as np
-
 import idealTrackbarValues
 
 windowName1 = "Adaptive Thresholding"
 windowName2 = 'Original'
-READ_FROM_CAMERA = False
+READ_FROM_CAMERA = True
 
 def readImg():
     destImg = cv.imread(imgInfo.imagePath)
@@ -103,6 +102,8 @@ if READ_FROM_CAMERA == True:
 generateTrackbars(windowName1, windowName2)
 
 while True:
+    k = cv.waitKey(1) & 0xFF
+
     if READ_FROM_CAMERA == True:
         _, scrabbleImage = src.read()
         scrabbleImage = cv.resize(scrabbleImage, imgInfo.testingDimension)
@@ -119,22 +120,20 @@ while True:
     blank = thresh.copy()
     blank[:] = 0
 
+    thHeight, thWidth = thresh.shape[:2]
+
     for idx in range(len(contours)):
         contour = contours[idx]
         cv.fillPoly(blank, pts=[contour], color=(255, 255, 255))
 
-        rectMinH, rectMaxH, rectMinW, rectMaxW = readRectBounds(windowName2)
+    rectMinH, rectMaxH, rectMinW, rectMaxW = readRectBounds(windowName2)
 
     contours, hierarchy = cv.findContours(blank, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
-
-    edges = cv.Canny(thresh, 100, 200)
 
     for contour in contours:
         (x, y, w, h) = cv.boundingRect(contour)
 
         if (h > rectMinH and h < rectMaxH and w < rectMaxW and w > rectMinW):
-            cv.rectangle(scrabbleImage, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
             # Getting the moments of the current contour.
             M = cv.moments(contour)
 
@@ -143,17 +142,19 @@ while True:
                 cx = int(M['m10'] / M['m00'])
                 cy = int(M['m01'] / M['m00'])
 
-                rect = cv.rectangle(scrabbleImage, (cx - 10, cy - 50) , (cx - 15, cy + 50), (255, 0, 0))
-                cv.circle(scrabbleImage, (cx, cy), 3, (0, 0, 255), -1)
+                if abs(cx - thWidth/2) < idealTrackbarValues.maxCenterErrorX and abs(cy - thHeight/2) < idealTrackbarValues.maxCenterErrorY:
+                    cv.rectangle(scrabbleImage, (x, y), (x + w, y + h), (0, 255, 0), 1)
+                    #cv.circle(scrabbleImage, (cx, cy), 3, (0, 0, 255), -1)
 
-    cv.imshow('Edges', edges)
+                    if k == ord('q') or k == ord('Q'):
+                        cv.imwrite(f'dest/img{i}.jpg', scrabbleImage[y:y+h, x:x+w])
+                        i += 1
+
     cv.imshow('Blank', blank)
     cv.imshow(windowName1, thresh)
     cv.imshow(windowName2, scrabbleImage)
 
-    k = cv.waitKey(1) & 0xFF
-
-    if k == ord('q'):
+    if k == ord('q') or k == ord('Q'):
         break
 
 cv.destroyAllWindows()
