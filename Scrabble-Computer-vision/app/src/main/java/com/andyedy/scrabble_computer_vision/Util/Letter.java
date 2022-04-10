@@ -1,0 +1,58 @@
+package com.andyedy.scrabble_computer_vision.Util;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.Locale;
+
+public class Letter implements Comparable, Parcelable {
+    private String value;
+    private int frequency;
+
+    public Letter(String value, int frequency) {
+        this.value = value.toUpperCase(Locale.ROOT);
+        this.frequency = frequency;
+    }
+
+    protected Letter(Parcel in) {
+        value = in.readString();
+        frequency = in.readInt();
+    }
+
+    public static final Creator<Letter> CREATOR = new Creator<Letter>() {
+        @Override
+        public Letter createFromParcel(Parcel in) {
+            return new Letter(in);
+        }
+
+        @Override
+        public Letter[] newArray(int size) {
+            return new Letter[size];
+        }
+    };
+
+    public String getValue() {
+        return value;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Letter toLetter = (Letter)o;
+        return value.compareTo(toLetter.getValue());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(value);
+        parcel.writeInt(frequency);
+    }
+}

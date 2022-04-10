@@ -8,47 +8,38 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+
+import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static Context myContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myContext = getApplicationContext();
         setContentView(R.layout.activity_main);
     }
 
-    public void takePicture(View view) {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PackageManager.PERMISSION_GRANTED);
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try{
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException ex)
-        {
-
-        }
+    public void startScanActivity(View view) {
+        Intent intent = new Intent(this, PictureActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap image_bitmap = (Bitmap) extras.get("data");
-
-            Intent displayIntent = new Intent(this, DisplayPictureActivity.class);
-            displayIntent.putExtra("snapped_picture", image_bitmap);
-            startActivity(displayIntent);
-        }
+    public static Context getMyContext() {
+        return myContext;
     }
 }

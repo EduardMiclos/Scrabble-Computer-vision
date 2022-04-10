@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Scrabble-computer-vision"
 include ':app'
+include ':openCVLibrary454'
+include ':openCVLibrary454'
