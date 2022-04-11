@@ -1,6 +1,8 @@
 import cv2 as cv
 import imageInfo as imgInfo
 
+# This is just a script I made for testing purposes and it shouldn't go on main branch.
+
 windowName = "Thresholding"
 
 # We can either read image from camera or from inside src folder.
