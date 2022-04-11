@@ -2,6 +2,7 @@ package com.andyedy.scrabble_computer_vision;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +32,7 @@ public class WordsActivity extends AppCompatActivity {
         words = new ArrayList<String>(Arrays.asList(wordArray));
 
         RecyclerView rv = findViewById(R.id.wordsRecyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new WordAdapter(this, words));
     }
 }

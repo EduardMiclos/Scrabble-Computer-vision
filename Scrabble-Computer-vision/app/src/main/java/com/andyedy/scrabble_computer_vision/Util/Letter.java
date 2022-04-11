@@ -3,11 +3,29 @@ package com.andyedy.scrabble_computer_vision.Util;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Letter implements Comparable, Parcelable {
     private String value;
     private int frequency;
+
+    public static ArrayList<Letter> getArrayFromString(String MyLetters) {
+        ArrayList<Letter> letterList = new ArrayList<>();
+        for (char c: MyLetters.toCharArray()) {
+            boolean exists = false;
+            for(Letter l: letterList) {
+                if (l.getValue().compareTo(String.format("%c", c)) == 0) {
+                    l.frequency++;
+                    exists = true;
+                }
+                if(exists) break;
+            }
+            if(!exists) letterList.add(new Letter(String.format("%c", c), 1));
+        }
+
+        return letterList;
+    }
 
     public Letter(String value, int frequency) {
         this.value = value.toUpperCase(Locale.ROOT);

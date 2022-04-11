@@ -11,6 +11,7 @@
         android:layout_width="409dp"
         android:layout_height="729dp"
         android:orientation="vertical"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wordsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="312dp" />
+            android:layout_height="312dp"
+            android:background="@color/white"/>
 
         <Space
             android:layout_width="match_parent"
