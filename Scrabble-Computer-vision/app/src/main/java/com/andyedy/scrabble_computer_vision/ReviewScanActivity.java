@@ -1,6 +1,8 @@
 package com.andyedy.scrabble_computer_vision;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andyedy.scrabble_computer_vision.Util.Letter;
+import com.andyedy.scrabble_computer_vision.Util.LetterAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +51,10 @@ public class ReviewScanActivity extends AppCompatActivity {
         ls = i.getParcelableArrayListExtra("LetterList");
 
         words = new ArrayList<>();
+
+        RecyclerView rv = findViewById(R.id.letter_RecyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(new LetterAdapter(this, ls));
     }
 
     public void displayLetters(View view) throws ExecutionException, InterruptedException {
@@ -65,6 +72,10 @@ public class ReviewScanActivity extends AppCompatActivity {
         startActivity(wordsActivityIntent);
     }
 
+    public void goBack(View view) {
+        finish();
+    }
+
     private String getMyLetters() {
         StringBuilder sb = new StringBuilder();
         for(Letter l: ls) {
@@ -79,12 +90,12 @@ public class ReviewScanActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            // display a progress dialog for good user experiance
+            // display a progress dialog for good user experience
             progressDialog = new ProgressDialog(ReviewScanActivity.this);
             progressDialog.setMessage("Loading words...");
             progressDialog.setCancelable(false);
             progressDialog.show();
+            super.onPreExecute();
         }
 
         @Override
@@ -145,8 +156,9 @@ public class ReviewScanActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
-            TextView resTextView = findViewById(R.id.textView);
-            resTextView.setText(s);
+            super.onPostExecute(s);
+//            TextView resTextView = findViewById(R.id.textView);
+//            resTextView.setText(s);
         }
 
 

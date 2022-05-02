@@ -15,7 +15,8 @@ public class Letter implements Comparable, Parcelable {
         for (char c: MyLetters.toCharArray()) {
             boolean exists = false;
             for(Letter l: letterList) {
-                if (l.getValue().compareTo(String.format("%c", c)) == 0) {
+                //if (l.getValue().compareTo(String.format("%c", c)) == 0) {
+                if(l.getValue().toUpperCase(Locale.ROOT).toCharArray()[0] == Character.toUpperCase(c)) {
                     l.frequency++;
                     exists = true;
                 }

@@ -28,7 +28,6 @@ public class PictureActivity extends AppCompatActivity {
 
     public void confirmPicture(View view) {
         Intent reviewIntent = new Intent(this, ReviewScanActivity.class);
-        //reviewIntent.putParcelableArrayListExtra("LetterList", (ArrayList<Letter>)ls.getLetters());
 
         TextInputEditText inp = findViewById(R.id.textInputEditText);
         reviewIntent.putParcelableArrayListExtra("LetterList", Letter.getArrayFromString(inp.getText().toString()));

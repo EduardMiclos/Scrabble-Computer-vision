@@ -6,25 +6,55 @@
     android:layout_height="match_parent"
     tools:context=".ReviewScanActivity">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="294dp"
-        android:onClick="displayLetters"
-        android:text="Button"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="248dp"
-        android:textColor="@color/white"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#5F399A"
+            android:padding="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="20dp"
+            android:text="@string/scanned_title"
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_surface"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/letter_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="520dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"/>
+
+        <Button
+            android:id="@+id/retake_button"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:onClick="goBack"
+            android:text="@string/retake_button"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/generate_button"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:onClick="displayLetters"
+            android:text="@string/generate_button"
+            android:textAlignment="center" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,4 +11,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="picture_confirm">Confirm Letters</string>
+    <string name="generate_button">Generate Words</string>
+    <string name="scanned_title">Scanned Letters</string>
+    <string name="retake_button">Retake Photo</string>
 </resources>
