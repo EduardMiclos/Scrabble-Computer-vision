@@ -10,34 +10,47 @@
         android:id="@+id/linearLayout"
         android:layout_width="409dp"
         android:layout_height="729dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <Space
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="184dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height="wrap_content"
+            android:background="#5F399A"
+            android:padding="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="20dp"
+            android:text="@string/words_title"
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_surface"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wordsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="312dp"
-            android:background="@color/white"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="144dp" />
+            android:layout_height="520dp"
+            android:background="@color/white"
+            android:scrollbars="vertical"/>
 
         <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
+            android:id="@+id/change_let_button"
+            android:layout_width="256dp"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:onClick="changeLetters"
+            android:text="@string/change_letters" />
+
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:onClick="done"
+            android:text="@string/done_button" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

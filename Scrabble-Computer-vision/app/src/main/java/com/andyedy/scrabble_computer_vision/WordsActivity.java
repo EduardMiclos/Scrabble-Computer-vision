@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.andyedy.scrabble_computer_vision.Util.WordAdapter;
@@ -34,5 +35,16 @@ public class WordsActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.wordsRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new WordAdapter(this, words));
+    }
+
+    public void changeLetters(View view) {
+        finish();
+    }
+
+    public void done(View view) {
+        Intent mainMenuIntent = new Intent(this, MainActivity.class);
+        mainMenuIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainMenuIntent);
+        finish();
     }
 }

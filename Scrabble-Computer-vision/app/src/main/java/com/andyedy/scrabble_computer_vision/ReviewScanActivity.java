@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -65,6 +66,8 @@ public class ReviewScanActivity extends AppCompatActivity {
         GetAPI ga = new GetAPI();
         String res = ga.execute().get();
         Toast.makeText(this, res, Toast.LENGTH_LONG);
+
+        Collections.sort(words);
 
         Intent wordsActivityIntent = new Intent(this, WordsActivity.class);
         //wordsActivityIntent.putExtra("WordList", words.toArray());

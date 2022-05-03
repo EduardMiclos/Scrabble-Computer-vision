@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 public class Letter implements Comparable, Parcelable {
@@ -24,6 +26,8 @@ public class Letter implements Comparable, Parcelable {
             }
             if(!exists) letterList.add(new Letter(String.format("%c", c), 1));
         }
+
+        Collections.sort(letterList);
 
         return letterList;
     }
