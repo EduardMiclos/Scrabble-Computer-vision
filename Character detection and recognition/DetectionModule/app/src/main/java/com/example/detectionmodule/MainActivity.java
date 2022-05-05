@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     CameraBridgeViewBase cameraBridgeViewBase;
     BaseLoaderCallback baseLoaderCallback;
 
+    Vector<Rect> lastBoundingRectangles;
+    Mat lastFrame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         };
         /*
         imageView = findViewById(R.id.image_view);
-        btnOpen = findViewById(R.id.bt_open);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -98,16 +100,44 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     },
                     100);
         }
-
+*/
+        imageView = findViewById(R.id.image_view);
+        btnOpen = findViewById(R.id.bt_open);
         btnOpen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                String str = callPython();
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 100);
+                //String str = callPython();
+                //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                //startActivityForResult(intent, 100);
+
+                onDestroy();
+
+                int x, y, width, height;
+
+                /* Iterating through all the bounding rectangles. */
+                for(Rect rectangle : lastBoundingRectangles){
+                x = rectangle.x;
+                y = rectangle.y;
+
+                width = rectangle.width;
+                height = rectangle.height;
+
+                /* Cropping the grayscale image. */
+                Mat ROI = lastFrame.submat(y, y + height, x, x + width);
+
+                /* Converting to byte[] array. */
+                byte[] bytes = new byte[(int) (ROI.total() * ROI.elemSize())];
+                ROI.get(0, 0, bytes);
+
+                /* Converting to string in order to send the parameter
+                to a Python program. */
+                String outputPythonString = ROI.rows() + ";" + ROI.cols() + Arrays.toString(bytes);
+
+                String res = callPython("structuralSimilarity", "main", outputPythonString);
+                Log.d("MyApp", res);
+            }
             }
         });
-         */
     }
 
     @Override
@@ -243,30 +273,34 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         int x, y, width, height;
 
+        lastBoundingRectangles = (Vector<Rect>) boundingRects.clone();
+        lastFrame = frame.clone();
+
         /* Iterating through all the bounding rectangles. */
-        for(Rect rectangle : boundingRects){
-            x = rectangle.x;
-            y = rectangle.y;
-
-            width = rectangle.width;
-            height = rectangle.height;
-
-            /* Cropping the grayscale image. */
-            Mat ROI = frame.submat(y, y + height, x, x + width);
-
-            /* Converting to byte[] array. */
-            byte[] bytes = new byte[(int) (ROI.total() * ROI.elemSize())];
-            ROI.get(0, 0, bytes);
-
-            /* Converting to string in order to send the parameter
-            to a Python program. */
-            String outputPythonString = ROI.rows() + ";" + ROI.cols() + Arrays.toString(bytes);
-
-        }
+//        for(Rect rectangle : boundingRects){
+//            x = rectangle.x;
+//            y = rectangle.y;
+//
+//            width = rectangle.width;
+//            height = rectangle.height;
+//
+//            /* Cropping the grayscale image. */
+//            Mat ROI = frame.submat(y, y + height, x, x + width);
+//
+//            /* Converting to byte[] array. */
+//            byte[] bytes = new byte[(int) (ROI.total() * ROI.elemSize())];
+//            ROI.get(0, 0, bytes);
+//
+//            /* Converting to string in order to send the parameter
+//            to a Python program. */
+//            String outputPythonString = ROI.rows() + ";" + ROI.cols() + Arrays.toString(bytes);
+//
+//            String res = callPython("structuralSimilarity", "main", outputPythonString);
+//            Log.d("MyApp", res);
+//        }
 
         return drawnFrame;
     }
-
 
     @Override
     protected void onResume(){
@@ -275,8 +309,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         if (!OpenCVLoader.initDebug()){
             Toast.makeText(getApplicationContext(),"An error occurred resuming the camera module!", Toast.LENGTH_SHORT).show();
         }
-
-        else{
+        else {
             baseLoaderCallback.onManagerConnected(baseLoaderCallback.SUCCESS);
         }
     }
@@ -316,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 //        }
     }
 
-    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -325,12 +357,10 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             imageView.setImageBitmap(captureImage);
         }
     }
-*/
 
-    private String callPython(String moduleName, String functionName, String arguments){
+    private String callPython(String moduleName, String functionName, String argument){
         Python python = Python.getInstance();
         PyObject pythonFile = python.getModule(moduleName);
-        return pythonFile.callAttr(functionName, arguments).toString();
+        return pythonFile.callAttr(functionName, argument).toString();
     }
-
 }

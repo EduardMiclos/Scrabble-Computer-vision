@@ -18,6 +18,13 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
 
+        python{
+            pip{
+                install "opencv-python"
+                install "scikit-image"
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
