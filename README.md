@@ -15,6 +15,10 @@ We are currently developing a **mobile application** which uses **Computer Visio
 
 <h1>Image processing diagram</h1>
 <p align="center">
-  <img width="800" src="https://i.imgur.com/HmJ33Mt.jpg" alt="Image processing diagram">
+  <img width="800" src="https://i.imgur.com/eBb4KsL.jpg" alt="Image processing diagram">
 </p>
 
+<h1>Character Recognition example</h1>
+<p align="center">
+  <img width="800" src="https://i.imgur.com/Wc9mGeP.gif" alt="Character Recognition example">
+</p>
