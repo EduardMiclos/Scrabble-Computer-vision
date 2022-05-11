@@ -36,6 +36,7 @@ import org.opencv.core.Rect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 public class PictureActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2, IdealConstants {
@@ -48,6 +49,8 @@ public class PictureActivity extends AppCompatActivity implements CameraBridgeVi
 
     Vector<Rect> lastBoundingRectangles;
     Mat lastFrame;
+
+    List<Letter> letterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,9 @@ public class PictureActivity extends AppCompatActivity implements CameraBridgeVi
 
         imageView = findViewById(R.id.image_view);
         btnOpen = findViewById(R.id.bt_open);
+
+        StringBuilder myStringBuilder = new StringBuilder();
+
         btnOpen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -113,8 +119,13 @@ public class PictureActivity extends AppCompatActivity implements CameraBridgeVi
                     String outputPythonString = ROI.rows() + ";" + ROI.cols() + Arrays.toString(bytes);
 
                     String res = callPython("structuralSimilarity", "main", outputPythonString);
-                    Log.d("gottenLetters", res);
+                    //Log.d("gottenLetters", res);
+                    char c = res.split(", '")[1].toCharArray()[0];
+                    if(Character.isAlphabetic(c))
+                        myStringBuilder.append(c);
                 }
+
+                letterList = Letter.getArrayFromString(myStringBuilder.toString());
             }
         });
     }
