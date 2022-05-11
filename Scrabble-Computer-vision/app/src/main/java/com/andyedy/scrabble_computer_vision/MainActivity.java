@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         myContext = getApplicationContext();
         setContentView(R.layout.activity_main);
+
+        if (OpenCVLoader.initDebug()) {
+            Log.d("myTag", "OpenCV loaded");
+        }
     }
 
     public void startScanActivity(View view) {
