@@ -10,13 +10,15 @@
         android:required="true" />
 
     <application
+        android:name="com.chaquo.python.android.PyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Scrabblecomputervision"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:screenOrientation="portrait">
         <activity
             android:name=".WordsActivity"
             android:exported="false" />
@@ -29,7 +31,8 @@
             android:exported="false"
             android:label="@string/title_activity_picture"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Scrabblecomputervision.NoActionBar" />
+            android:theme="@style/Theme.Scrabblecomputervision.NoActionBar"
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

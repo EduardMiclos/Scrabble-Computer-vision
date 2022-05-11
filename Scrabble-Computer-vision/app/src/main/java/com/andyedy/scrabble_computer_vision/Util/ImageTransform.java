@@ -1,4 +1,4 @@
-package com.example.detectionmodule;
+package com.andyedy.scrabble_computer_vision.Util;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.example.detectionmodule;
+package com.andyedy.scrabble_computer_vision.Util;
 
 /* These are empirical constants that won't dynamically
 change during program execution. */

@@ -1,0 +1,1 @@
+['D:\\Proiecte personale\\Scrabble-Computer-vision\\Character-detection-and-recognition\\DetectionModule\\app\\src\\main\\python\\test.py']

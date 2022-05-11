@@ -17,4 +17,6 @@
     <string name="change_letters">Change Letters</string>
     <string name="done_button">Done</string>
     <string name="words_title">Word List</string>
+
+    <string name="capture_button">Capture Image</string>
 </resources>
